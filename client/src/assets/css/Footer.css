@@ -1,0 +1,78 @@
+@import './Variables.css';
+footer {
+  padding: 10px;
+  background: var(--bg-primario);
+  color: var(--txt-cuarto);
+  box-shadow: 0 -8px 10px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  border-top: var(--sombra-chica);
+  width: 100%;
+  font-size: medium;
+}
+
+
+
+.footer-redes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.footer-redes a,
+.footer-redes p {
+  color:var(--txt-cuarto); 
+  text-decoration: none;
+  font-weight: bold;
+  display: flex; 
+  align-items: center;
+}
+
+.footer-redes a i {
+  margin-right: 0.5em;
+}
+
+i {
+  font-size: 2em;
+  transition: transform 0.3s ease;
+}
+
+/* --- Media queries para responsive --- */
+@media (max-width: 768px) {
+  footer {
+    padding: 8px;
+    font-size: small;
+  }
+
+  .footer-redes {
+    gap: 1.5em;
+  }
+
+  i {
+    font-size: 1.8em;
+  }
+}
+
+@media (max-width: 480px) {
+  footer {
+    padding: 5px;
+    font-size: x-small;
+  }
+
+  .footer-redes {
+    gap: 1em;
+  }
+
+  .footer-redes a,
+  .footer-redes p {
+    justify-content: center;
+  }
+
+  i {
+    font-size: 1.5em;
+  }
+}
+
+

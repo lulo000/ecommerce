@@ -2,6 +2,7 @@ import "../assets/css/StyleGeneral.css";
 
 export default function NavBar({ onFilter, onSort }) {
   return (
+    <body>
     <nav className="navbar">
       <div className="filters">
         <button onClick={() => onFilter('entradas')}>Entradas</button>
@@ -16,6 +17,6 @@ export default function NavBar({ onFilter, onSort }) {
           <option value="desc">Mayor a menor</option>
         </select>
       </div>
-    </nav>
+    </nav></body>
   );
 }
