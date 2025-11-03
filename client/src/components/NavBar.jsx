@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../assets/css/StyleGeneral.css";
 
 export default function NavBar({ onFilter, onSort, onSearch }) {
   const [query, setQuery] = useState("");
+  const [categorias, setCategorias] = useState([]);
+
+  useEffect(() => {
+    // Carga las categorías desde el backend
+    fetch("http://localhost:5000/api/categorias")
+      .then((res) => res.json())
+      .then((data) => setCategorias(data))
+      .catch((err) => console.error("Error al obtener categorías:", err));
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -12,10 +21,17 @@ export default function NavBar({ onFilter, onSort, onSearch }) {
   return (
     <nav className="navbar">
       <div className="filters">
-        <button onClick={() => onFilter("entradas")}>Entradas</button>
-        <button onClick={() => onFilter("principales")}>Platos Principales</button>
-        <button onClick={() => onFilter("postres")}>Postres</button>
-        <button onClick={() => onFilter("bebidas")}>Bebidas</button>
+        <button onClick={() => onFilter("__ALL__")}>
+          Ver todo
+        </button>
+        {categorias.map((cat) => (
+          <button
+            key={cat.idCategoria}
+            onClick={() => onFilter(cat.nombre)}
+          >
+            {cat.nombre}
+          </button>
+        ))}
       </div>
 
       <form className="search-bar" onSubmit={handleSearch} role="search">
@@ -27,7 +43,9 @@ export default function NavBar({ onFilter, onSort, onSearch }) {
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Buscar productos"
         />
-        <button className="search-button" type="submit">Buscar</button>
+        <button className="search-button" type="submit">
+          Buscar
+        </button>
       </form>
 
       <div className="sort">

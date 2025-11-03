@@ -1,24 +1,52 @@
-import Header from '../components/Header';
-import NavBar from '../components/NavBar';
-import Footer from '../components/Footer';
-import Menu from '../components/Menu';
-import { useState } from 'react';
-import pizzaImg from '../assets/img/Pizza.png';
+import Header from "../components/Header";
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
+import Menu from "../components/Menu";
+import { useState } from "react";
+import pizzaImg from "../assets/img/Pizza.png";
 
 export default function Home() {
-  const [cartCount, setCartCount] = useState(2); // ejemplo
-  const [filter, setFilter] = useState('');
-  const [sort, setSort] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [sortOrder, setSortOrder] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleFilter = (categoriaNombre) => {
+    console.log("Filtrar por categoría:", categoriaNombre);
+    // Si es 'Ver todo', alterna entre mostrar todo y ocultar
+    if (categoriaNombre === "__ALL__") {
+      setSelectedCategory((prev) => (prev === "__ALL__" ? null : "__ALL__"));
+      return;
+    }
+    // Toggle normal por nombre de categoría
+    setSelectedCategory((prev) => (prev === categoriaNombre ? null : categoriaNombre));
+  };
+
+  const handleSort = (orden) => {
+    console.log("Orden:", orden);
+    setSortOrder(orden);
+  };
+
+  const handleSearch = (query) => {
+    console.log("Buscar:", query);
+    setSearchQuery(query);
+  };
 
   return (
     <>
-      <Header cartCount={cartCount} />
-      <NavBar onFilter={setFilter} onSort={setSort} />
+  <Header />
+      <NavBar onFilter={handleFilter} onSort={handleSort} onSearch={handleSearch} />
+
+      {selectedCategory && (
+        <Menu 
+          selectedCategory={selectedCategory} 
+          sortOrder={sortOrder} 
+          searchQuery={searchQuery} 
+        />
+      )}
+
       <div className="homeImg">
         <img src={pizzaImg} alt="pizza" />
       </div>
-      <Menu filter={filter} sort={sort} />
-      {/* Aquí iría tu lista de productos filtrados y ordenados */}
       <Footer />
     </>
   );
