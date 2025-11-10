@@ -7,9 +7,28 @@ export function useCart() {
 }
 
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState([]);
-  const [diners, setDiners] = useState(1); // Número de comensales
+  // Inicializar desde localStorage
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+  
+  const [diners, setDiners] = useState(() => {
+    const savedDiners = localStorage.getItem('diners');
+    return savedDiners ? parseInt(savedDiners) : 1;
+  });
+  
   const maxItemsPerDiner = 4;
+
+  // Guardar carrito en localStorage cuando cambie
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
+  // Guardar diners en localStorage cuando cambie
+  useEffect(() => {
+    localStorage.setItem('diners', diners.toString());
+  }, [diners]);
 
   // Calcular el límite total de items basado en el número de comensales
   const totalItemLimit = diners * maxItemsPerDiner;
@@ -86,6 +105,8 @@ export function CartProvider({ children }) {
   // Limpiar carrito
   const clearCart = () => {
     setCart([]);
+    localStorage.removeItem('cart');
+    localStorage.removeItem('diners');
   };
 
   // Calcular total del carrito

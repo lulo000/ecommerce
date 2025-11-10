@@ -90,6 +90,11 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     localStorage.removeItem('auth_token');
+    // Limpiar datos del carrito
+    localStorage.removeItem('cart');
+    localStorage.removeItem('diners');
+    localStorage.removeItem('numberOfPeople');
+    localStorage.removeItem('appliedDiscount');
     setUser(null);
   };
 

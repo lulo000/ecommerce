@@ -4,9 +4,9 @@ export default function Footer() {
   return (
     <footer className="Footer">
       <div className='TituloFooter'>
-      <h1>ALMACEN DE PIZZAS</h1>
+      <h1>ALMACÉN DE PIZZAS</h1>
       </div>
-      <p><h2>Contactanos en nuestras redes sociales:</h2></p>
+      <p><h3>Contactanos en nuestras redes sociales:</h3></p>
       <div className='footer-redes'>
       <a href="https://www.facebook.com/AlmacenDePizzasARG"> <i class="fa-brands fa-facebook-f"></i></a>
       <a href=" https://www.instagram.com/accounts/login/?next=%2Falmacendepizzas%2F&source=omni_redirect"><i class="fa-brands fa-instagram"> </i>

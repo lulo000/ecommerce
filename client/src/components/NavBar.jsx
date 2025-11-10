@@ -44,7 +44,7 @@ export default function NavBar({ onFilter, onSort, onSearch }) {
           aria-label="Buscar productos"
         />
         <button className="search-button" type="submit">
-          Buscar
+          <i class="fa-solid fa-magnifying-glass"></i>
         </button>
       </form>
 

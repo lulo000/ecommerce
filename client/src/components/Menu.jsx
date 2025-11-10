@@ -120,7 +120,6 @@ export default function Menu({ selectedCategory, sortOrder, searchQuery }) {
           <p>Has alcanzado el límite de {totalItemLimit} artículos.</p>
           <div className="cart-full-actions">
             <Link to="/cart" className="cart-full-button">Ver carrito</Link>
-            <button className="cart-full-secondary" onClick={() => setShowFullCard(false)}>Seguir comprando</button>
           </div>
         </div>
       )}
