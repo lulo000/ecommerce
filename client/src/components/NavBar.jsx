@@ -10,7 +10,7 @@ export default function NavBar({ onFilter, onSort, onSearch }) {
     fetch("http://localhost:5000/api/categorias")
       .then((res) => res.json())
       .then((data) => setCategorias(data))
-      .catch((err) => console.error("Error al obtener categorías:", err));
+      .catch((err) => {});
   }, []);
 
   const handleSearch = (e) => {
@@ -34,7 +34,7 @@ export default function NavBar({ onFilter, onSort, onSearch }) {
         ))}
       </div>
 
-      <form className="search-bar" onSubmit={handleSearch} role="search">
+      {/* <form className="search-bar" onSubmit={handleSearch} role="search">
         <input
           className="search-input"
           type="text"
@@ -46,7 +46,7 @@ export default function NavBar({ onFilter, onSort, onSearch }) {
         <button className="search-button" type="submit">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
-      </form>
+      </form> */}
 
       <div className="sort">
         <select onChange={(e) => onSort(e.target.value)}>

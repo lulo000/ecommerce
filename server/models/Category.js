@@ -3,38 +3,40 @@ import connection from "../config/DB.js";
 
 class Category {
   // Obtener todas las categorías
-  static getAll(callback) {
+  static async getAll() {
     const sql = "SELECT * FROM categorias";
-    connection.query(sql, callback);
+    const [results] = await connection.query(sql);
+    return results;
   }
 
   // Obtener categoría por ID
-  static getById(id, callback) {
+  static async getById(id) {
     const sql = "SELECT * FROM categorias WHERE idCategoria = ?";
-    connection.query(sql, [id], (err, results) => {
-      if (err) return callback(err);
-      callback(null, results[0]);
-    });
+    const [results] = await connection.query(sql, [id]);
+    return results[0];
   }
 
   // Crear nueva categoría
-  static create(categoryData, callback) {
+  static async create(categoryData) {
     const sql = "INSERT INTO categorias (nombre) VALUES (?)";
     const values = [categoryData.nombre];
-    connection.query(sql, values, callback);
+    const [result] = await connection.query(sql, values);
+    return result;
   }
 
   // Actualizar categoría
-  static update(id, categoryData, callback) {
+  static async update(id, categoryData) {
     const sql = "UPDATE categorias SET nombre = ? WHERE idCategoria = ?";
     const values = [categoryData.nombre, id];
-    connection.query(sql, values, callback);
+    const [result] = await connection.query(sql, values);
+    return result;
   }
 
   // Eliminar categoría
-  static delete(id, callback) {
+  static async delete(id) {
     const sql = "DELETE FROM categorias WHERE idCategoria = ?";
-    connection.query(sql, [id], callback);
+    const [result] = await connection.query(sql, [id]);
+    return result;
   }
 }
 

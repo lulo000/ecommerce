@@ -9,6 +9,8 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import productosRoutes from "./routes/productos.js";
 import categoriesRoutes from "./routes/categories.js";
+import codigosRoutes from "./routes/codigos.js";
+import pedidosRoutes from "./routes/pedidos.js";
 
 // Importar middlewares
 import { errorHandler, notFound } from "./middlewares/errorHandler.js";
@@ -32,6 +34,8 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.use("/api/auth", authRoutes);
 app.use("/api/productos", productosRoutes);
 app.use("/api/categorias", categoriesRoutes);
+app.use("/api/codigos", codigosRoutes);
+app.use("/api/pedidos", pedidosRoutes);
 
 // Ruta de prueba
 app.get("/", (req, res) => {

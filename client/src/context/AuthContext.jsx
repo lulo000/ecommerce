@@ -37,7 +37,6 @@ export function AuthProvider({ children }) {
         localStorage.removeItem('auth_token');
       }
     } catch (error) {
-      console.error('Error validando token:', error);
       localStorage.removeItem('auth_token');
     } finally {
       setLoading(false);
@@ -61,7 +60,6 @@ export function AuthProvider({ children }) {
       setUser(data.user);
       return true;
     } catch (error) {
-      console.error('Error en login:', error);
       return false;
     }
   };
@@ -83,7 +81,6 @@ export function AuthProvider({ children }) {
       setUser(data.user);
       return true;
     } catch (error) {
-      console.error('Error en registro:', error);
       return false;
     }
   };

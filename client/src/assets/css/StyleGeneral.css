@@ -84,13 +84,15 @@ body {
 } */
 
 .search-button {
-    padding: 0.45rem 0.8rem;
-    border-radius: 10px;
+    padding: var(--btn-padding-sm);
+    border-radius: var(--btn-border-radius);
     border: none;
     background-color: var(--secundario);
     color: var(--quinto);
-    font-weight: bold;
+    font-size: var(--btn-font-size);
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .search-button:hover {
@@ -245,15 +247,21 @@ h2{
 .cart-full-card p { margin: 0 0 12px 0; color: var(--quinto); }
 .cart-full-actions { display: flex; gap: 10px; justify-content: flex-end; }
 .cart-full-button {
-    background-color: #27ae60;
+    background-color: var(--septimo);
     color: var(--primario);
     border: none;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-weight: 700;
+    padding: var(--btn-padding-sm);
+    border-radius: var(--btn-border-radius);
+    font-size: var(--btn-font-size);
+    font-weight: 600;
     text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
-.cart-full-button:hover { background-color: #2ecc71; }
+.cart-full-button:hover { 
+    background-color: var(--octavo);
+    transform: translateY(-1px);
+}
 .cart-full-secondary {
     background: transparent;
     border: 1px solid var(--quinto);
@@ -322,13 +330,20 @@ h2{
 }
 
 .cart-quantity-btn {
-    padding: 0.3rem 0.6rem;
+    padding: var(--btn-padding-xs);
     background: var(--terciario);
     color: var(--primario);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--btn-border-radius);
+    font-size: var(--btn-font-size);
+    font-weight: 600;
     cursor: pointer;
-    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.cart-quantity-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
 }
 
 .cart-item-actions {
@@ -339,13 +354,20 @@ h2{
 }
 
 .cart-remove-btn {
-    padding: 0.5rem 1rem;
-    background: #e74c3c;
-    color: white;
+    padding: var(--btn-padding-sm);
+    background: var(--noveno);
+    color: var(--primario);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--btn-border-radius);
+    font-size: var(--btn-font-size);
+    font-weight: 600;
     cursor: pointer;
-    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.cart-remove-btn:hover {
+    background: var(--decimo);
+    transform: translateY(-1px);
 }
 
 .cart-summary {
@@ -364,12 +386,19 @@ h2{
 .back-button {
     display: inline-block;
     margin-bottom: 1rem;
-    padding: 0.5rem 1rem;
+    padding: var(--btn-padding-sm);
     background: var(--quinto);
     color: var(--primario);
     text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
+    border-radius: var(--btn-border-radius);
+    font-size: var(--btn-font-size);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.back-button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
 }
 
 /* Responsive: stack navbar items and center search on small screens */
@@ -434,19 +463,22 @@ h2{
     font-size: 0.875rem;
 }
 
+/* ==================== BOTONES ESTANDARIZADOS ==================== */
 .btn-primary {
     background-color: var(--secundario);
     color: var(--primario);
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    font-weight: bold;
+    padding: var(--btn-padding);
+    border-radius: var(--btn-border-radius);
+    font-size: var(--btn-font-size);
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
     opacity: 0.9;
+    transform: translateY(-1px);
 }
 
 /* Responsive */
@@ -466,15 +498,15 @@ h2{
 }
 
 .admin-card {
-    background: white;
+    background: var(--primario);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     overflow: hidden;
 }
 
 .admin-header {
-    background: #e74c3c;
-    color: white;
+    background: var(--noveno);
+    color: var(--primario);
     padding: 1.5rem;
 }
 
@@ -490,8 +522,8 @@ h2{
 
 .admin-tabs {
     display: flex;
-    border-bottom: 1px solid #ddd;
-    background: #f8f8f8;
+    border-bottom: 1px solid var(--decimosexto);
+    background: var(--decimoquinto);
 }
 
 .admin-tab {
@@ -501,13 +533,13 @@ h2{
     border-bottom: 3px solid transparent;
     cursor: pointer;
     font-weight: 400;
-    font-size: 1rem;
+    font-size: var(--btn-font-size);
     transition: all 0.3s;
 }
 
 .admin-tab.active {
-    background: white;
-    border-bottom-color: #e74c3c;
+    background: var(--primario);
+    border-bottom-color: var(--noveno);
     font-weight: 700;
 }
 
@@ -527,21 +559,23 @@ h2{
 }
 
 .btn-new {
-    padding: 0.75rem 1.5rem;
-    background: #27ae60;
-    color: white;
+    padding: var(--btn-padding);
+    background: var(--septimo);
+    color: var(--primario);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--btn-border-radius);
+    font-size: var(--btn-font-size);
     cursor: pointer;
     font-weight: 600;
-    transition: opacity 0.2s;
+    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
 }
 
 .btn-new:hover {
-    opacity: 0.9;
+    background: var(--octavo);
+    transform: translateY(-1px);
 }
 
 .btn-new i {
@@ -549,11 +583,15 @@ h2{
 }
 
 .btn-cancel {
-    background: #95a5a6;
+    background: var(--decimotercero);
+}
+
+.btn-cancel:hover {
+    background: var(--decimocuarto);
 }
 
 .admin-form {
-    background: #f8f8f8;
+    background: var(--decimoquinto);
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 2rem;
@@ -572,9 +610,9 @@ h2{
 .form-textarea,
 .form-select {
     padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
+    border: 1px solid var(--decimosexto);
+    border-radius: var(--btn-border-radius);
+    font-size: var(--btn-font-size);
     font-family: Arial, sans-serif;
 }
 
@@ -583,18 +621,20 @@ h2{
 }
 
 .btn-submit {
-    padding: 0.75rem;
-    background: #27ae60;
-    color: white;
+    padding: var(--btn-padding);
+    background: var(--septimo);
+    color: var(--primario);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--btn-border-radius);
     cursor: pointer;
     font-weight: 600;
-    font-size: 1rem;
+    font-size: var(--btn-font-size);
+    transition: all 0.2s ease;
 }
 
 .btn-submit:hover {
-    background: #2ecc71;
+    background: var(--octavo);
+    transform: translateY(-1px);
 }
 
 .admin-table {
@@ -604,8 +644,8 @@ h2{
 }
 
 .admin-table thead tr {
-    background: #f8f8f8;
-    border-bottom: 2px solid #ddd;
+    background: var(--decimoquinto);
+    border-bottom: 2px solid var(--decimosexto);
 }
 
 .admin-table th {
@@ -619,7 +659,7 @@ h2{
 }
 
 .admin-table tbody tr {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--decimoseptimo);
 }
 
 .admin-table td {
@@ -643,18 +683,19 @@ h2{
 
 .product-price {
     font-weight: 700;
-    color: #e74c3c;
+    color: var(--noveno);
 }
 
 .btn-edit {
-    padding: 0.5rem 0.7rem;
+    padding: var(--btn-padding-sm);
     margin-right: 0.5rem;
-    background: #3498db;
-    color: white;
+    background: var(--undecimo);
+    color: var(--primario);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--btn-border-radius);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: var(--btn-font-size);
+    font-weight: 600;
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
@@ -662,18 +703,19 @@ h2{
 }
 
 .btn-edit:hover {
-    background: #2980b9;
-    transform: scale(1.1);
+    background: var(--duodecimo);
+    transform: translateY(-2px);
 }
 
 .btn-delete {
-    padding: 0.5rem 0.7rem;
-    background: #e74c3c;
-    color: white;
+    padding: var(--btn-padding-sm);
+    background: var(--noveno);
+    color: var(--primario);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--btn-border-radius);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: var(--btn-font-size);
+    font-weight: 600;
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
@@ -681,8 +723,8 @@ h2{
 }
 
 .btn-delete:hover {
-    background: #c0392b;
-    transform: scale(1.1);
+    background: var(--decimo);
+    transform: translateY(-2px);
 }
 
 .btn-edit i,

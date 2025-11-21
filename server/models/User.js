@@ -3,71 +3,70 @@ import connection from "../config/DB.js";
 
 class User {
   // Crear un nuevo usuario
-  static create(userData, callback) {
+  static async create(userData) {
     const sql = "INSERT INTO usuarios (nombre, email, contraseña) VALUES (?, ?, ?)";
     const values = [userData.nombre, userData.email, userData.password];
-    connection.query(sql, values, callback);
+    const [result] = await connection.query(sql, values);
+    return result;
   }
 
   // Buscar usuario por email
-  static findByEmail(email, callback) {
+  static async findByEmail(email) {
     const sql = "SELECT * FROM usuarios WHERE email = ?";
-    connection.query(sql, [email], (err, results) => {
-      if (err) return callback(err);
-      callback(null, results[0]);
-    });
+    const [results] = await connection.query(sql, [email]);
+    return results[0];
   }
 
   // Buscar usuario por ID con su rol
-  static findById(id, callback) {
+  static async findById(id) {
     const sql = `
       SELECT u.idUsuario, u.nombre, u.email, r.nombre as role 
       FROM usuarios u
       LEFT JOIN roles r ON u.idUsuario = r.idUsuario
       WHERE u.idUsuario = ?
     `;
-    connection.query(sql, [id], (err, results) => {
-      if (err) return callback(err);
-      callback(null, results[0]);
-    });
+    const [results] = await connection.query(sql, [id]);
+    return results[0];
   }
 
   // Obtener todos los usuarios (solo admin)
-  static getAll(callback) {
+  static async getAll() {
     const sql = `
       SELECT u.idUsuario, u.nombre, u.email, r.nombre as role 
       FROM usuarios u
       LEFT JOIN roles r ON u.idUsuario = r.idUsuario
     `;
-    connection.query(sql, callback);
+    const [results] = await connection.query(sql);
+    return results;
   }
 
   // Actualizar usuario
-  static update(id, userData, callback) {
+  static async update(id, userData) {
     const sql = "UPDATE usuarios SET nombre = ?, email = ? WHERE idUsuario = ?";
     const values = [userData.nombre, userData.email, id];
-    connection.query(sql, values, callback);
+    const [result] = await connection.query(sql, values);
+    return result;
   }
 
   // Eliminar usuario
-  static delete(id, callback) {
+  static async delete(id) {
     const sql = "DELETE FROM usuarios WHERE idUsuario = ?";
-    connection.query(sql, [id], callback);
+    const [result] = await connection.query(sql, [id]);
+    return result;
   }
 
   // Crear rol para un usuario
-  static createRole(idUsuario, roleName, callback) {
+  static async createRole(idUsuario, roleName) {
     const sql = "INSERT INTO roles (idUsuario, nombre) VALUES (?, ?)";
-    connection.query(sql, [idUsuario, roleName], callback);
+    const [result] = await connection.query(sql, [idUsuario, roleName]);
+    return result;
   }
 
   // Obtener rol de un usuario
-  static getRole(idUsuario, callback) {
+  static async getRole(idUsuario) {
     const sql = "SELECT nombre FROM roles WHERE idUsuario = ?";
-    connection.query(sql, [idUsuario], (err, results) => {
-      if (err) return callback(err);
-      callback(null, results[0]);
-    });
+    const [results] = await connection.query(sql, [idUsuario]);
+    return results[0];
   }
 }
 

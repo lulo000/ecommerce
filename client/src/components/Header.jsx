@@ -22,7 +22,7 @@ export default function Header() {
             {/* Solo mostrar panel admin si es admin@gmail.com */}
             {user.email === 'admin@gmail.com' && (
               <Link to="/admin" className="admin-button">
-                🔧 Panel Admin
+              Panel Admin
               </Link>
             )}
             
@@ -37,7 +37,7 @@ export default function Header() {
         )}
         
         <Link to="/cart" className="cart-link" aria-label="Ver carrito">
-          <span className="cart-icon">🛒</span>
+          <span className="cart-icon"><i className="fa-solid fa-cart-shopping"></i></span>
           <span className="cart-count">{currentTotalItems}</span>
         </Link>
       </div>

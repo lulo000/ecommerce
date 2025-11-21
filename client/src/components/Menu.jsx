@@ -43,7 +43,6 @@ export default function Menu({ selectedCategory, sortOrder, searchQuery }) {
         setProductos(filteredData);
       })
       .catch((err) => {
-        console.error("Error al obtener productos:", err);
       })
       .finally(() => setLoading(false));
   }, [selectedCategory, sortOrder, searchQuery]);

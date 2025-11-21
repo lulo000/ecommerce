@@ -1,8 +1,33 @@
 :root{
+    /* Colores base */
     --primario: #ffffff;
     --secundario: #ece8e5;
     --terciario: #3f3e3e;
-    --cuarto:#c3b7a3;
-    --quinto:#a19a94;
+    --cuarto: #c3b7a3;
+    --quinto: #a19a94;
     --sexto: #000000;
+    
+    /* Colores de acción */
+    --septimo: #27ae60;
+    --octavo: #2ecc71;
+    --noveno: #e74c3c;
+    --decimo: #c0392b;
+    --undecimo: #3498db;
+    --duodecimo: #2980b9;
+    --decimotercero: #95a5a6;
+    --decimocuarto: #7f8c8d;
+    
+    /* Colores de fondo y bordes */
+    --decimoquinto: #f8f8f8;
+    --decimosexto: #dddddd;
+    --decimoseptimo: #eeeeee;
+    
+    /* Tamaños de botones estandarizados */
+    --btn-padding: 0.75rem 1.5rem;
+    --btn-padding-sm: 0.5rem 1rem;
+    --btn-padding-xs: 0.4rem 0.8rem;
+    --btn-border-radius: 4px;
+    --btn-font-size: 1rem;
+    --btn-font-size-sm: 0.9rem;
+    --btn-font-size-xs: 0.85rem;
 }

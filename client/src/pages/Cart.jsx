@@ -1,30 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../assets/css/StyleGeneral.css';
 
-// Códigos de descuento válidos
-const DISCOUNT_CODES = {
-  'PIZZA10': { percentage: 10, description: '10% de descuento' },
-  'PIZZA20': { percentage: 20, description: '20% de descuento' },
-  'VERANO2025': { percentage: 15, description: '15% de descuento' },
-  'PROMO50': { percentage: 50, description: '50% de descuento' }
-};
-
 export default function Cart() {
   const { cart, updateQuantity, removeFromCart, getTotal, totalItemLimit, currentTotalItems } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
   
-  // Estados
   const [numberOfPeople, setNumberOfPeople] = useState(1);
   const [discountCode, setDiscountCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(null);
   const [discountError, setDiscountError] = useState('');
   const [showSummary, setShowSummary] = useState(false);
+  const [notification, setNotification] = useState(null);
+  const [orderSuccess, setOrderSuccess] = useState(null);
 
-  // Persistencia de datos del carrito
   useEffect(() => {
     const savedPeople = localStorage.getItem('numberOfPeople');
     const savedDiscount = localStorage.getItem('appliedDiscount');
@@ -45,14 +39,12 @@ export default function Cart() {
     }
   }, [appliedDiscount]);
 
-  // Cálculos
   const subtotal = getTotal();
-  const tax = subtotal * 0.10; // 10% de impuesto
+  const tax = subtotal * 0.10;
   const discountAmount = appliedDiscount ? (subtotal * appliedDiscount.percentage) / 100 : 0;
   const total = subtotal + tax - discountAmount;
 
-  // Aplicar código de descuento
-  const handleApplyDiscount = () => {
+  const handleApplyDiscount = async () => {
     const code = discountCode.trim().toUpperCase();
     
     if (!code) {
@@ -60,59 +52,229 @@ export default function Cart() {
       return;
     }
 
-    if (DISCOUNT_CODES[code]) {
-      setAppliedDiscount(DISCOUNT_CODES[code]);
+    try {
+      const response = await fetch(`http://localhost:5000/api/codigos/validate/${code}`);
+      
+      if (!response.ok) {
+        setDiscountError('Código inválido');
+        setAppliedDiscount(null);
+        return;
+      }
+
+      const data = await response.json();
+      setAppliedDiscount({
+        percentage: data.descuento,
+        description: `${data.descuento}% de descuento`,
+        codigo: data.codigo
+      });
       setDiscountError('');
       setDiscountCode('');
-    } else {
-      setDiscountError('Código inválido');
+    } catch (error) {
+      setDiscountError('Error al validar el código');
       setAppliedDiscount(null);
     }
   };
 
-  // Remover descuento
   const handleRemoveDiscount = () => {
     setAppliedDiscount(null);
     setDiscountCode('');
     setDiscountError('');
   };
 
-  // Finalizar compra
   const handleCheckout = () => {
-    // Validaciones
     if (cart.length === 0) {
-      alert('El carrito está vacío');
+      setNotification({ type: 'error', message: 'El carrito está vacío' });
+      setTimeout(() => setNotification(null), 3000);
       return;
     }
 
     if (numberOfPeople < 1) {
-      alert('El número de personas debe ser al menos 1');
+      setNotification({ type: 'error', message: 'El número de personas debe ser al menos 1' });
+      setTimeout(() => setNotification(null), 3000);
       return;
     }
 
     if (currentTotalItems > totalItemLimit) {
-      alert(`El carrito excede el límite de ${totalItemLimit} artículos`);
+      setNotification({ type: 'error', message: `El carrito excede el límite de ${totalItemLimit} artículos` });
+      setTimeout(() => setNotification(null), 3000);
       return;
     }
 
-    // Mostrar resumen antes de proceder
     setShowSummary(true);
   };
 
-  // Confirmar pedido
-  const handleConfirmOrder = () => {
-    // Aquí se puede redirigir a la página de pago
-    alert('Pedido confirmado! Redirigiendo a la página de pago...');
-    // navigate('/checkout'); // Descomentar cuando exista la página
-    
-    // Limpiar datos guardados
-    localStorage.removeItem('numberOfPeople');
-    localStorage.removeItem('appliedDiscount');
+  const handleConfirmOrder = async () => {
+    try {
+      if (!user) {
+        setNotification({ type: 'error', message: 'Debes iniciar sesión para completar la compra' });
+        setTimeout(() => {
+          setNotification(null);
+          navigate('/login');
+        }, 2000);
+        return;
+      }
+
+      const pedidoData = {
+        idUsuario: user.idUsuario || user.id,
+        mesa: 1,
+        cantidadClientes: numberOfPeople,
+        productos: cart.map(item => ({
+          idProducto: item.id,
+          cantidad: item.quantity
+        }))
+      };
+
+      const token = localStorage.getItem('auth_token');
+      
+      const response = await fetch('http://localhost:5000/api/pedidos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(pedidoData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al crear el pedido');
+      }
+      
+      setShowSummary(false);
+      setOrderSuccess({
+        idPedido: data.idPedido,
+        total: total.toFixed(2),
+        items: cart.length,
+        personas: numberOfPeople
+      });
+      
+      localStorage.removeItem('cart');
+      localStorage.removeItem('numberOfPeople');
+      localStorage.removeItem('appliedDiscount');
+      
+      setTimeout(() => {
+        setOrderSuccess(null);
+        navigate('/');
+      }, 5000);
+      
+    } catch (error) {
+      setNotification({ type: 'error', message: error.message || 'Error al procesar el pedido' });
+      setTimeout(() => setNotification(null), 3000);
+      setShowSummary(false);
+    }
   };
 
   return (
     <>
       <Header />
+      
+      {/* Notificaciones */}
+      {notification && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          background: notification.type === 'error' ? 'var(--noveno)' : 'var(--septimo)',
+          color: 'white',
+          padding: '1rem 1.5rem',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          zIndex: 2000,
+          maxWidth: '400px',
+          animation: 'slideIn 0.3s ease'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <i className={`fa-solid ${notification.type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check'}`}></i>
+            <span>{notification.message}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Tarjeta de éxito del pedido */}
+      {orderSuccess && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000,
+          padding: '1rem'
+        }}>
+          <div style={{
+            background: 'white',
+            padding: '3rem',
+            borderRadius: '16px',
+            maxWidth: '500px',
+            width: '100%',
+            textAlign: 'center',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+          }}>
+            <div style={{
+              width: '80px',
+              height: '80px',
+              background: 'var(--septimo)',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 1.5rem',
+              fontSize: '2.5rem',
+              color: 'white'
+            }}>
+              <i className="fa-solid fa-check"></i>
+            </div>
+            
+            <h2 style={{ margin: '0 0 1rem 0', color: 'var(--septimo)' }}>¡Gracias por tu compra!</h2>
+            
+            <div style={{ background: 'var(--decimoquinto)', padding: '1.5rem', borderRadius: '8px', marginBottom: '1.5rem' }}>
+              <div style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem' }}>
+                Pedido #{orderSuccess.idPedido} confirmado
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.95rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Total pagado:</span>
+                  <span style={{ fontWeight: '700' }}>${orderSuccess.total}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Productos:</span>
+                  <span>{orderSuccess.items} items</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Personas:</span>
+                  <span>{orderSuccess.personas}</span>
+                </div>
+              </div>
+            </div>
+            
+            <p style={{ color: 'var(--quinto)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+              Tu pedido está siendo preparado. Recibirás una notificación cuando esté listo.
+            </p>
+            
+            <button
+              onClick={() => {
+                setOrderSuccess(null);
+                navigate('/');
+              }}
+              className="product-card-button"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                fontSize: '1rem',
+                fontWeight: '600'
+              }}
+            >
+              Volver al inicio
+            </button>
+          </div>
+        </div>
+      )}
       
       <div className="cart-page" style={{maxWidth: 900, margin: '2rem auto', padding: '0 1rem'}}>
         <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem'}}>
@@ -197,14 +359,11 @@ export default function Cart() {
                     </button>
                   </div>
                   {discountError && <div style={{color: '#e74c3c', fontSize: '0.9rem'}}>{discountError}</div>}
-                  <div style={{fontSize: '0.85rem', color: '#666', marginTop: '0.5rem'}}>
-                    Códigos disponibles: PIZZA10, PIZZA20, VERANO2025, PROMO50
-                  </div>
                 </div>
               ) : (
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#d4edda', padding: '1rem', borderRadius: '4px', border: '1px solid #c3e6cb'}}>
                   <div>
-                    <div style={{fontWeight: '600', color: '#155724'}}>✓ Descuento aplicado</div>
+                    <div style={{fontWeight: '600', color: '#155724'}}>Descuento aplicado</div>
                     <div style={{fontSize: '0.9rem', color: '#155724'}}>{appliedDiscount.description}</div>
                   </div>
                   <button 
@@ -212,7 +371,7 @@ export default function Cart() {
                     style={{background: 'transparent', border: 'none', color: '#721c24', cursor: 'pointer', fontSize: '1.2rem'}}
                     aria-label="Remover descuento"
                   >
-                    ✕
+                    <i className="fa-solid fa-xmark"></i>
                   </button>
                 </div>
               )}
@@ -336,14 +495,10 @@ export default function Cart() {
             <div style={{display: 'flex', gap: '1rem'}}>
               <button 
                 onClick={() => setShowSummary(false)}
+                className="btn-cancel product-card-button"
                 style={{
                   flex: 1,
                   padding: '0.75rem',
-                  background: '#95a5a6',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
                   fontWeight: '600'
                 }}
               >

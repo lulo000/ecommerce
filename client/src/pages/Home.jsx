@@ -11,7 +11,6 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleFilter = (categoriaNombre) => {
-    console.log("Filtrar por categoría:", categoriaNombre);
     // Si es 'Ver todo', alterna entre mostrar todo y ocultar
     if (categoriaNombre === "__ALL__") {
       setSelectedCategory((prev) => (prev === "__ALL__" ? null : "__ALL__"));
@@ -22,12 +21,10 @@ export default function Home() {
   };
 
   const handleSort = (orden) => {
-    console.log("Orden:", orden);
     setSortOrder(orden);
   };
 
   const handleSearch = (query) => {
-    console.log("Buscar:", query);
     setSearchQuery(query);
   };
 
